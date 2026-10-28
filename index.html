@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>מטמיע AI לעסקים</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Karantina:wght@700&family=Assistant:wght@400;600;800&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: RTL, one strong left-weighted hero with a live savings meter; then process strip, use-cases grid, calculator, contact band */
+:root{
+  --bg:#EDEFEA; --surface:#FFFFFF; --ink:#16201D; --muted:#5A6661; --line:#CBD1CB;
+  --accent:#1F46C9; --accent-ink:#FFFFFF; --signal:#E9B526;
+  --display:"Karantina","Assistant",system-ui,sans-serif;
+  --body:"Assistant",system-ui,"Segoe UI",Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#101614; --surface:#18201D; --ink:#E7ECE8; --muted:#9AA6A0; --line:#2C3632;
+  --accent:#7D98FF; --accent-ink:#0B1020; --signal:#F2C94C; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101614; --surface:#18201D; --ink:#E7ECE8; --muted:#9AA6A0; --line:#2C3632;
+  --accent:#7D98FF; --accent-ink:#0B1020; --signal:#F2C94C; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:18px;line-height:1.6;direction:rtl}
+.wrap{max-width:1120px;margin-inline:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+section{padding-block:72px}
+h1,h2{font-family:var(--display);font-weight:700;line-height:.95;text-wrap:balance;margin:0}
+h1{font-size:clamp(64px,11vw,132px);letter-spacing:-.5px}
+h2{font-size:clamp(44px,6vw,72px)}
+h3{margin:0;font-size:21px;font-weight:800}
+p{margin:0}
+.eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:.08em;color:var(--muted)}
+a.btn,button.btn{display:inline-flex;align-items:center;gap:8px;font:800 18px var(--body);padding:14px 26px;border-radius:4px;border:2px solid var(--ink);text-decoration:none;cursor:pointer}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn:focus-visible,input:focus-visible{outline:3px solid var(--signal);outline-offset:3px}
+
+nav{display:flex;justify-content:space-between;align-items:center;padding-block:20px;border-bottom:1px solid var(--line)}
+nav .mark{font-family:var(--display);font-size:34px}
+nav .mark b{color:var(--accent)}
+nav a{color:var(--ink);font-weight:600;text-decoration:none}
+
+.hero{display:grid;grid-template-columns:1.25fr .9fr;gap:48px;align-items:end;padding-block:64px 56px}
+.hero h1 mark{background:linear-gradient(transparent 62%,var(--signal) 62%);color:inherit;padding-inline:4px}
+.hero .lead{font-size:21px;color:var(--muted);max-width:34ch;margin-block:22px 30px}
+.hero .ctas{display:flex;gap:12px;flex-wrap:wrap}
+.log{background:var(--ink);color:var(--bg);border-radius:6px;padding:22px;font-family:var(--mono);font-size:14px;line-height:1.9;min-width:0}
+.log .row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed color-mix(in srgb,var(--bg) 25%,transparent)}
+.log .row:last-child{border:0}
+.log .ok{color:var(--signal)}
+.log .total{margin-top:14px;font-size:13px;opacity:.75}
+.log .big{font-family:var(--display);font-size:64px;line-height:1;color:var(--signal);font-variant-numeric:tabular-nums}
+
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:2px solid var(--ink);margin-top:36px}
+.step{padding:22px 0 0 20px;display:grid;gap:8px;align-content:start}
+.step .n{font-family:var(--mono);color:var(--accent);font-size:14px}
+.step .dur{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.step p{color:var(--muted);font-size:17px}
+
+.uses{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:36px}
+.use{background:var(--surface);padding:26px;display:grid;gap:10px;align-content:start}
+.use p{color:var(--muted);font-size:17px}
+.use .tag{font-family:var(--mono);font-size:12px;color:var(--accent)}
+
+.calc{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.calc .controls{display:grid;gap:26px}
+.calc label{display:flex;justify-content:space-between;font-weight:600}
+.calc output{font-family:var(--mono);font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.result{border:2px solid var(--ink);padding:30px;display:grid;gap:6px}
+.result .big{font-family:var(--display);font-size:clamp(72px,10vw,120px);line-height:.9;font-variant-numeric:tabular-nums}
+.result .unit{color:var(--muted)}
+.result small{color:var(--muted);font-size:14px}
+
+.contact{background:var(--accent);color:var(--accent-ink)}
+.contact .wrap{display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:center}
+.contact p{opacity:.9;font-size:20px;margin-top:14px}
+.card{display:grid;gap:12px}
+.line{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid currentColor;padding-block:12px;font-size:20px}
+.line span{font-family:var(--mono);user-select:all;direction:ltr}
+.copy{background:transparent;color:inherit;border:1px solid currentColor;border-radius:3px;font:600 14px var(--body);padding:4px 10px;cursor:pointer}
+footer{padding-block:28px;color:var(--muted);font-size:14px}
+
+@media (max-width:820px){
+  .hero,.calc,.contact .wrap{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr 1fr;row-gap:24px}
+  .uses{grid-template-columns:1fr}
+  section{padding-block:52px}
+}
+@media (max-width:440px){.steps{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:no-preference){.log .row{animation:in .5s both}.log .row:nth-child(2){animation-delay:.15s}.log .row:nth-child(3){animation-delay:.3s}.log .row:nth-child(4){animation-delay:.45s}@keyframes in{from{transform:translateY(6px)}to{transform:none}}}
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <nav>
+    <div class="mark">מטמיע<b>.AI</b></div>
+    <a href="#contact">לתיאום שיחה</a>
+  </nav>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <div>
+      <div class="eyebrow">הטמעת בינה מלאכותית לעסקים קטנים ובינוניים</div>
+      <h1>העובדים שלכם עושים עבודה <mark>שמכונה</mark> יכולה לעשות.</h1>
+      <p class="lead">אני ממפה את התהליכים בעסק, בוחר את כלי ה-AI שמתאימים להם, מחבר אותם למערכות שכבר יש לכם ומלמד את הצוות לעבוד איתם.</p>
+      <div class="ctas">
+        <a class="btn primary" href="#contact">לשיחת מיפוי חינם</a>
+        <a class="btn ghost" href="#calc">כמה זמן תחסכו?</a>
+      </div>
+    </div>
+    <div class="log" aria-label="דוגמה לחיסכון שבועי">
+      <div class="row"><span>מענה ללידים מהאתר</span><span class="ok">‎−6.5 ש׳</span></div>
+      <div class="row"><span>הפקת הצעות מחיר</span><span class="ok">‎−4 ש׳</span></div>
+      <div class="row"><span>סיכומי פגישות ומשימות</span><span class="ok">‎−3 ש׳</span></div>
+      <div class="row"><span>הזנת חשבוניות להנה״ח</span><span class="ok">‎−2.5 ש׳</span></div>
+      <div class="total">דוגמה: משרד של 5 עובדים, חיסכון בשבוע</div>
+      <div class="big">16 שעות</div>
+    </div>
+  </div>
+
+  <section>
+    <div class="wrap">
+      <div class="eyebrow">תהליך העבודה</div>
+      <h2>מהמיפוי ועד שהצוות עובד לבד</h2>
+      <div class="steps">
+        <div class="step"><span class="n">01</span><h3>מיפוי</h3><span class="dur">שבוע 1</span><p>יושבים עם הצוות ומוצאים את המשימות שחוזרות על עצמן ואוכלות הכי הרבה זמן.</p></div>
+        <div class="step"><span class="n">02</span><h3>פיילוט</h3><span class="dur">14 יום</span><p>מטמיעים פתרון אחד, מודדים את החיסכון בפועל ומחליטים יחד אם להמשיך.</p></div>
+        <div class="step"><span class="n">03</span><h3>הטמעה</h3><span class="dur">2–6 שבועות</span><p>חיבור ל-CRM, למייל, לוואטסאפ ולמערכת הנהלת החשבונות, עם הרשאות ואבטחת מידע.</p></div>
+        <div class="step"><span class="n">04</span><h3>הדרכה וליווי</h3><span class="dur">3 חודשים</span><p>הדרכה לכל עובד, מדריכים כתובים ותמיכה עד שהכלים הופכים לשגרה.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="wrap">
+      <div class="eyebrow">מה מטמיעים</div>
+      <h2>פתרונות שעובדים כבר ביום הראשון</h2>
+      <div class="uses">
+        <div class="use"><span class="tag">שירות ומכירות</span><h3>סוכן מענה ללקוחות</h3><p>עונה בוואטסאפ ובאתר 24/7, מסנן לידים וקובע פגישות ביומן.</p></div>
+        <div class="use"><span class="tag">בק-אופיס</span><h3>אוטומציה של מסמכים</h3><p>קריאת חשבוניות, הפקת הצעות מחיר וחוזים מתבנית והזנה למערכות.</p></div>
+        <div class="use"><span class="tag">ידע ארגוני</span><h3>עוזר על בסיס הידע שלכם</h3><p>צ׳אט פנימי שעונה מנהלים, ממחירונים וממסמכים של העסק.</p></div>
+        <div class="use"><span class="tag">ניהול</span><h3>סיכומי פגישות ומשימות</h3><p>תמלול, סיכום ופתיחת משימות אוטומטית לכל משתתף.</p></div>
+        <div class="use"><span class="tag">שיווק</span><h3>תוכן בקול של המותג</h3><p>פוסטים, ניוזלטרים ומודעות לפי הסגנון וההנחיות של העסק.</p></div>
+        <div class="use"><span class="tag">הדרכה</span><h3>סדנאות לצוות</h3><p>סדנה מעשית לעבודה נכונה עם ChatGPT, Claude ו-Copilot בעבודה היומיומית.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="calc" style="padding-top:0">
+    <div class="wrap calc">
+      <div class="controls">
+        <div class="eyebrow">מחשבון חיסכון</div>
+        <h2>כמה שעות חוזרות לעסק?</h2>
+        <div>
+          <label for="emp">מספר עובדים <output id="empOut">8</output></label>
+          <input id="emp" type="range" min="1" max="50" value="8">
+        </div>
+        <div>
+          <label for="hrs">שעות בשבוע על משימות שגרתיות, לעובד <output id="hrsOut">10</output></label>
+          <input id="hrs" type="range" min="1" max="30" value="10">
+        </div>
+        <div>
+          <label for="cost">עלות שעת עבודה (₪) <output id="costOut">80</output></label>
+          <input id="cost" type="range" min="40" max="300" step="5" value="80">
+        </div>
+      </div>
+      <div class="result" aria-live="polite">
+        <span class="unit">שעות שמתפנות בחודש</span>
+        <span class="big" id="hoursRes">0</span>
+        <span class="unit">שווי חודשי מוערך: <b id="moneyRes">₪0</b></span>
+        <small>החישוב מניח שאוטומציה חוסכת כ-40% מזמן המשימות השגרתיות, ו-4.3 שבועות בחודש. זו הערכה גסה, לא הבטחה.</small>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact">
+    <div class="wrap">
+      <div>
+        <h2>שיחת מיפוי של 30 דקות, בלי עלות</h2>
+        <p>נעבור על התהליכים בעסק ותצאו עם רשימה של 3 דברים שאפשר להטמיע כבר החודש.</p>
+      </div>
+      <div class="card">
+        <div class="line">טלפון <span id="phone">050-000-0000</span><button class="copy" data-copy="phone" type="button">העתקה</button></div>
+        <div class="line">מייל <span id="mail">hello@example.com</span><button class="copy" data-copy="mail" type="button">העתקה</button></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap">© 2026 מטמיע.AI · הטמעת בינה מלאכותית לעסקים</footer>
+
+<script>
+const $=id=>document.getElementById(id);
+function calc(){
+  const e=+$('emp').value,h=+$('hrs').value,c=+$('cost').value;
+  $('empOut').textContent=e;$('hrsOut').textContent=h;$('costOut').textContent=c;
+  const saved=Math.round(e*h*0.4*4.3);
+  $('hoursRes').textContent=saved.toLocaleString('he-IL');
+  $('moneyRes').textContent='₪'+(saved*c).toLocaleString('he-IL');
+}
+['emp','hrs','cost'].forEach(id=>$(id).addEventListener('input',calc));calc();
+document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
+  const el=$(b.dataset.copy),t=el.textContent;
+  navigator.clipboard.writeText(t).then(()=>{b.textContent='הועתק'},()=>{const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='סומן'});
+  setTimeout(()=>b.textContent='העתקה',1800);
+}));
+</script>
+
+</body>
+</html>
